@@ -5,16 +5,7 @@ import cv2
 import datetime
 from Touch_Detector import Touch_Detector
 
-def change_grayscale_threshold(x):
-    Touch_Detector.grayscale_threshold = x
 
-
-def change_min_area_threshold(x):
-    Touch_Detector.min_touch_area = x
-
-
-def change_max_area_threshold(x):
-    Touch_Detector.max_touch_area = x
 
 gestures_command = dict([('wait', 0), ('up', 1), ('down', 2), ('left', 3), ('right', 4), ('three', 5), ('four', 6), ('pinch', 7)])
 
@@ -123,10 +114,21 @@ class Gesture_Detector:
 
     def initGestureDetector(self):
         print("in gesture detector2")
+
         grayscale_threshold = 170
         touch_detector = Touch_Detector(grayscale_threshold=grayscale_threshold, width_height_ratio_threshold=0.3,
                                         min_touch_area=500,
                                         max_touch_area=7000)
+
+        def change_grayscale_threshold(x):
+            touch_detector.grayscale_threshold = x
+
+        def change_min_area_threshold(x):
+            touch_detector.min_touch_area = x
+
+        def change_max_area_threshold(x):
+            touch_detector.max_touch_area = x
+
         # gesture_detector = Gesture_Detector()
         camera_port = 1
         camera = cv2.VideoCapture(camera_port)

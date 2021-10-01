@@ -12,7 +12,7 @@ def change_max_area_threshold(x):
     touch_detector.max_touch_area = x
 
 if __name__ == '__main__':
-    grayscale_threshold = 170
+    grayscale_threshold = 150
     touch_detector = Touch_Detector(grayscale_threshold=grayscale_threshold, width_height_ratio_threshold=0.3, min_touch_area=500,
                                     max_touch_area=7000)
     gesture_detector = Gesture_Detector()

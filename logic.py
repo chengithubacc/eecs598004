@@ -27,7 +27,7 @@ def new_game(n):
     return matrix
 
 
-def expand_size(matrix:list, max_size = 10):
+def expand_size(matrix:list, max_size = 6):
     n_old = len(matrix)
     if n_old<max_size:
         matrix_new = []
@@ -36,8 +36,8 @@ def expand_size(matrix:list, max_size = 10):
             row_tmp = [0]+matrix[i]+[0]
             matrix_new.append(row_tmp)
         matrix_new.append([0]*(n_old+2))
-        c.GRID_LEN+=2
-        c.SIZE+=200
+        c.GRID_LEN+=1
+        c.SIZE+=100
         return matrix_new
     else:
         print("Cannot Expand Size: exceed maximum ",max_size)
