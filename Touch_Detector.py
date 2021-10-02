@@ -11,6 +11,7 @@ class Touch_Detector:
         self.width_height_ratio_threshold = width_height_ratio_threshold
         self.min_touch_area = min_touch_area
         self.max_touch_area = max_touch_area
+        self.thresholded_image = None
 
     def is_ellipse_valid(self,ellipse):
         # check ratio
@@ -19,14 +20,17 @@ class Touch_Detector:
         r = ellipse[2]
         return w>self.width_height_ratio_threshold*h and h>self.width_height_ratio_threshold*w
 
+    def get_current_thresholded_image(self):
+        return self.thresholded_image
+
     def get_touch_ellipses(self, gray_frame):
         """
         Get touch ellipse and location for a given grayscale frame
         :param gray_frame: input grayscale frame
         :return: a list of ellipses
         """
-        threshold_image = cv2.inRange(gray_frame, self.grayscale_threshold, 255)
-        contours, hierarchy = cv2.findContours(image=threshold_image, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
+        self.thresholded_image = cv2.inRange(gray_frame, self.grayscale_threshold, 255)
+        contours, hierarchy = cv2.findContours(image=self.thresholded_image, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
         possible_ellipses = []
         for cnt in contours:
             if self.max_touch_area>cv2.contourArea(cnt)>self.min_touch_area:
@@ -50,3 +54,4 @@ class Touch_Detector:
             text_string = 'x:'+str(round(x, 2))+' y:'+str(round(y, 2))+'\n'+'w:'+str(round(w, 2))+' h:'+str(round(h, 2))
             cv2.putText(image, text_string, (int(x+50), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),1)
         return image
+

@@ -1,7 +1,7 @@
 from Touch_Detector import Touch_Detector
 import cv2
 from GD2 import *
-
+from datetime import datetime
 print("in gesture detector2")
 
 grayscale_threshold = 130
@@ -23,7 +23,8 @@ def change_max_area_threshold(x):
 
 
 # gesture_detector = Gesture_Detector()
-camera_port = "out2.avi"
+# camera_port = "out2.avi"
+camera_port = 1
 camera = cv2.VideoCapture(camera_port)
 
 cv2.namedWindow('image')
@@ -41,9 +42,9 @@ while True:
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         ellipses = touch_detector.get_touch_ellipses(gray_frame)
         gd2.add_ellipses(ellipses)
-        gesture = gd2.detect_gesture()
+        gesture = gd2.detect_gesture(touch_detector.get_current_thresholded_image())
         if gesture is not Gestures.NO_GESTURE:
-            print(gesture)
+            print(datetime.now(), gesture)
         rgb_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)
         image = touch_detector.visualize(ellipses=ellipses, image=rgb_frame)
         cv2.imshow("image", image)
