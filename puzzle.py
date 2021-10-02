@@ -97,6 +97,8 @@ class GameGrid(Frame):
                 grid_row.append(t)
             self.grid_cells.append(grid_row)
 
+        self.background = background
+
     def update_grid_layout(self):
         background = Frame(self, bg=c.BACKGROUND_COLOR_GAME,width=c.SIZE, height=c.SIZE+1)
         background.grid()
@@ -202,7 +204,18 @@ class GameGrid(Frame):
             # changed to expand grid size
             print("Reset Triggered")
             self.matrix = logic.expand_size(self.matrix)
-            self.update_grid_layout()
+
+            # self.update_grid_layout()
+            # self.grid.
+            # self.grid_cells.append(grid_row)
+            # for grid_row in self.grid_cells:
+            #     for t in grid_row:
+            #         t.destroy()
+            #     grid_row.destroy()
+            self.background.destroy()
+            self.grid_cells = []
+
+            self.init_grid()
             self.update_grid_cells()
             print(len(self.matrix), c.GRID_LEN)
 
