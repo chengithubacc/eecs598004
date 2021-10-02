@@ -1,3 +1,18 @@
+class GD2:
+    def __init__(self):
+        self.history = {}
+
+    def
+
+class Ellipse_History:
+    def __init__(self):
+        self.history = {}
+        self.id = 0
+
+    def add(self, ellipse):
+        pass
+
+    def get_closest_id
 def process_gesture(pos_history:dict,buffer_size):
     pos_dict = {}
     for i,j in pos_history.items():

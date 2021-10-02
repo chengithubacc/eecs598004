@@ -31,11 +31,11 @@ def expand_size(matrix:list, max_size = 6):
     n_old = len(matrix)
     if n_old<max_size:
         matrix_new = []
-        matrix_new.insert(0,[0]*(n_old+2))
+        matrix_new.insert(0,[0]*(n_old+1))
         for i in range(n_old):
-            row_tmp = [0]+matrix[i]+[0]
+            row_tmp = matrix[i]+[0]
             matrix_new.append(row_tmp)
-        matrix_new.append([0]*(n_old+2))
+        matrix_new.append([0]*(n_old+1))
         c.GRID_LEN+=1
         c.SIZE+=100
         return matrix_new
