@@ -12,7 +12,9 @@ class Ellipse_History:
     def add(self, ellipse):
         pass
 
-    def get_closest_id
+    def get_closest_id(self):
+        for i,j in self.history.items():
+
 def process_gesture(pos_history:dict,buffer_size):
     pos_dict = {}
     for i,j in pos_history.items():

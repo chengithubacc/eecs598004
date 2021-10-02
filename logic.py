@@ -27,7 +27,7 @@ def new_game(n):
     return matrix
 
 
-def expand_size(matrix:list, max_size = 6):
+def expand_size(matrix:list, max_size = 7):
     n_old = len(matrix)
     if n_old<max_size:
         matrix_new = []
