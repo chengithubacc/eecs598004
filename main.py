@@ -22,11 +22,11 @@ class Game2048():
         #"before the start`"
         self._t_effector1.start()
 
-        self._t_effector2 = threading.Thread(target=self.pizzle_worker)
-        self._t_effector2.daemon = True
-
-        # "before the start`"
-        self._t_effector2.start()
+        # self._t_effector2 = threading.Thread(target=self.pizzle_worker)
+        # self._t_effector2.daemon = True
+        #
+        # # "before the start`"
+        # self._t_effector2.start()
 
     def pizzle_worker(self):
         Game = puzzle.GameGrid()
