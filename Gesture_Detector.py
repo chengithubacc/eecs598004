@@ -157,7 +157,7 @@ class Gesture_Detector:
                 curr_patience = self.track_movement(ellipses, prev_ellipses, curr_patience, latest_time)
                 latest_time, self.command = self.decide_action(curr_patience, latest_time)
                 self.new_data = True
-                # print(command)
+                # print(self.command)
                 cv2.waitKey(80)
                 prev_ellipses = ellipses
 

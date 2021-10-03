@@ -5,12 +5,15 @@ import kbInput
 import puzzle
 import Gesture_Detector
 
+Game = None
+
 class Game2048():
     def __init__(self):
         self.gesture = None
         self.new_gesture_flag = False
         self.flag = False
         self.GD = None
+        # self.game = None
 
         # self._lock = threading.RLock()
         self._t_effector1 = threading.Thread(target=self.gesture_worker)
@@ -26,9 +29,11 @@ class Game2048():
         self._t_effector2.start()
 
     def pizzle_worker(self):
-        puzzle.GameGrid()
+        Game = puzzle.GameGrid()
 
     def gesture_worker(self):
+        lastTime = time.time()
+        frozen_flag = False
         while True:
             try:
                 if self.flag == False:
@@ -42,7 +47,19 @@ class Game2048():
                 # self.gesture = random.randint(1,8)
 
                 # print(self.gesture)
-                kbInput.createKeyInput(self.gesture)
+                # if self.gesture != 0:
+                #     lastTime = time.time()
+                #     frozen_flag = False
+                # elif frozen_flag == False and self.gesture == 0 and time.time() - lastTime > 3:
+                #     print("Starting Frozen")
+                #     frozen_flag = True
+                #     Game.frozen_flag = True
+                #     kbInput.createKeyInput(10)
+
+                # TODO: need to uncomment: turn off the input in the testing
+                # kbInput.createKeyInput(self.gesture)
+                kbInput.createKeyInput(0)
+
             except Exception as e:
                 print("EXCEPTION In gesture_worker: ", e)
             # # self.new_gesture_flag = True

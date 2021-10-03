@@ -25,6 +25,7 @@ VK_DOWN = 0x28
 VK_BACK = 0x42
 VK_CHANGE = 0x43
 VK_RESET = 0x52
+VK_SPACE = 0x0A
 
 # C struct definitions
 
@@ -95,6 +96,10 @@ def ReleaseKey(hexKeyCode):
 def createKeyInput(val):
     if val == 0:
         return
+        PressKey(VK_SPACE)
+        time.sleep(0.05)
+        ReleaseKey(VK_SPACE)
+
     elif val == 1:
         PressKey(VK_UP)
         time.sleep(0.05)
