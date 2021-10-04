@@ -1,18 +1,21 @@
 import math
+import threading
 from enum import Enum
+from Touch_Detector import Touch_Detector
+from datetime import datetime
 
 import cv2
 
 
 class Gestures(Enum):
     NO_GESTURE=0
-    THREE_PRESS_HOLD=1
-    FOUR_PRESS_HOLD=2
+    THREE_PRESS_HOLD=1  # back to previous board
+    FOUR_PRESS_HOLD=2   # reset to 4*4
     SWIPE_UP=3
     SWIPE_DOWN=4
     SWIPE_LEFT=5
     SWIPE_RIGHT=6
-    PINCH=7
+    PINCH=7             # change, VK_CHANGE, c
     PALM_PRESSING=8
 
 class Single_Gestures(Enum):
@@ -35,6 +38,12 @@ class GD2:
         self.palm_pressing_missing_threshold = palm_pressing_missing_threshold
         self.palm_pressing_status = {"is_triggered":False,
                                      "not_pressed_ct":0}
+
+        self.gesture = None
+        self._t_effector = threading.Thread(target=self.initGestureDetector)
+        self._t_effector.daemon = True
+        # "before the start`"
+        self._t_effector.start()
 
     def print_single_gestures(self):
         printed = False
@@ -192,6 +201,54 @@ class GD2:
             gesture = Single_Gestures.SWIPE
             value = [dex,dey]
         return gesture,value
+
+    def getGesture(self):
+        return self.gesture
+
+    def initGestureDetector(self):
+
+        grayscale_threshold = 130
+        touch_detector = Touch_Detector(grayscale_threshold=grayscale_threshold, width_height_ratio_threshold=0.3,
+                                        min_touch_area=500,
+                                        max_touch_area=7000)
+
+        def change_grayscale_threshold(x):
+            touch_detector.grayscale_threshold = x
+
+        def change_min_area_threshold(x):
+            touch_detector.min_touch_area = x
+
+        def change_max_area_threshold(x):
+            touch_detector.max_touch_area = x
+
+        # gesture_detector = Gesture_Detector()
+        # camera_port = "out2.avi"
+        camera_port = 2
+        camera = cv2.VideoCapture(camera_port)
+
+        cv2.namedWindow('image')
+        cv2.createTrackbar('GrayscaleMinValue', 'image', 0, 255, change_grayscale_threshold)
+        cv2.setTrackbarPos('GrayscaleMinValue', 'image', grayscale_threshold)
+        cv2.createTrackbar('Min Area', 'image', 10, 1000, change_min_area_threshold)
+        cv2.setTrackbarPos('Min Area', 'image', 500)
+        cv2.createTrackbar('Max Area', 'image', 10, 10000, change_max_area_threshold)
+        cv2.setTrackbarPos('Max Area', 'image', 7000)
+
+        gd2 = GD2()
+        while True:
+            ok, frame = camera.read()
+            if ok:
+                gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                ellipses = touch_detector.get_touch_ellipses(gray_frame)
+                gd2.add_ellipses(ellipses)
+                self.gesture = gd2.detect_gesture(touch_detector.get_current_thresholded_image())
+                if self.gesture is not Gestures.NO_GESTURE:
+                    print(datetime.now(), self.gesture)
+                rgb_frame = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)
+                image = touch_detector.visualize(ellipses=ellipses, image=rgb_frame)
+                cv2.imshow("image", image)
+                cv2.moveWindow("image", 1, 1)
+                cv2.waitKey(1)
 
 class Ellipse_History:
     def __init__(self):

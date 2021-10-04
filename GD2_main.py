@@ -24,7 +24,7 @@ def change_max_area_threshold(x):
 
 # gesture_detector = Gesture_Detector()
 # camera_port = "out2.avi"
-camera_port = 1
+camera_port = 2
 camera = cv2.VideoCapture(camera_port)
 
 cv2.namedWindow('image')

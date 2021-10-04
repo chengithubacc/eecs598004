@@ -1,6 +1,7 @@
 import ctypes
 from ctypes import wintypes
 import time
+from GD2 import Gestures
 
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
@@ -96,49 +97,49 @@ def ReleaseKey(hexKeyCode):
     user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
 
 def createKeyInput(val):
-    if val == 0:
+    if val == Gestures.NO_GESTURE:
         return
         PressKey(VK_SPACE)
         time.sleep(0.05)
         ReleaseKey(VK_SPACE)
 
-    elif val == 1:
+    elif val == Gestures.SWIPE_UP:
         PressKey(VK_UP)
         time.sleep(0.05)
         ReleaseKey(VK_UP)
 
-    elif val == 2:
+    elif val == Gestures.SWIPE_DOWN:
         PressKey(VK_DOWN)
         time.sleep(0.05)
         ReleaseKey(VK_DOWN)
 
-    elif val == 3:
+    elif val == Gestures.SWIPE_LEFT:
         PressKey(VK_LEFT)
         time.sleep(0.05)
         ReleaseKey(VK_LEFT)
 
-    elif val == 4:
+    elif val == Gestures.SWIPE_RIGHT:
         PressKey(VK_RIGHT)
         time.sleep(0.05)
         ReleaseKey(VK_RIGHT)
 
-    elif val == 5:
+    elif val == Gestures.THREE_PRESS_HOLD:
         PressKey(VK_BACK)
         time.sleep(0.05)
         ReleaseKey(VK_BACK)
 
-    elif val == 6:
+    elif val == Gestures.PINCH:
         PressKey(VK_CHANGE)
         time.sleep(0.05)
         ReleaseKey(VK_CHANGE)
 
-    elif val == 7:
+    elif val == Gestures.FOUR_PRESS_HOLD:
         PressKey(VK_RESET)
         time.sleep(0.05)
         ReleaseKey(VK_RESET)
 
 
-    elif val == 8:
+    elif val == Gestures.PALM_PRESSING:
         PressKey(VK_P)
         time.sleep(0.05)
         ReleaseKey(VK_P)

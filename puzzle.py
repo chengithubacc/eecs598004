@@ -235,7 +235,7 @@ class GameGrid(Frame):
         if self.frozen_status != 0:
             self.update_grid_frost(self.blockImg)
         self.frozen_status = 0
-
+        self.progress["value"] = 0
 
     def update_grid_cells(self):
         score = 0
@@ -317,15 +317,22 @@ class GameGrid(Frame):
 
         # self.frozen_status =
         if key == c.KEY_QUIT: exit()
-        elif key == c.KEY_CHANGE:
-            color_list = list(c.BACKGROUND_COLOR_DICT.values())
-            print(color_list)
-            random.shuffle(color_list)
-            for num, color in zip(c.BACKGROUND_COLOR_DICT.keys(), color_list):
-                c.BACKGROUND_COLOR_DICT[num] = color
+        # elif key == c.KEY_CHANGE:
+        #     color_list = list(c.BACKGROUND_COLOR_DICT.values())
+        #     print(color_list)
+        #     random.shuffle(color_list)
+        #     for num, color in zip(c.BACKGROUND_COLOR_DICT.keys(), color_list):
+        #         c.BACKGROUND_COLOR_DICT[num] = color
+        #     self.update_grid_cells()
+
+        if key == c.KEY_RESET:
+            self.matrix = logic.reduce_size(self.matrix)
+            self.background.destroy()
+            self.grid_cells = []
+            self.init_grid()
             self.update_grid_cells()
 
-        elif key == c.KEY_RESET:
+        elif key == c.KEY_CHANGE:
             c.BACKGROUND_COLOR_DICT = c.BACKGROUND_COLOR_DICT_ORG.copy()
             self.update_grid_cells()
             # changed to expand grid size
@@ -337,10 +344,10 @@ class GameGrid(Frame):
             self.init_grid()
             self.update_grid_cells()
             print(len(self.matrix), c.GRID_LEN)
-            panel = tk.Label(self.background, image=self.blockImg)
-            panel.pack(side="bottom", fill="both", expand="yes")
+            # panel = tk.Label(self.background, image=self.blockImg)
+            # panel.pack(side="bottom", fill="both", expand="yes")
 
-        if key == c.KEY_BACK and len(self.history_matrixs) > 1:
+        elif key == c.KEY_BACK and len(self.history_matrixs) > 1:
             self.matrix = self.history_matrixs.pop()
             self.update_grid_cells()
             print('back on step total step:', len(self.history_matrixs))
@@ -357,6 +364,9 @@ class GameGrid(Frame):
                 if logic.game_state(self.matrix) == 'lose':
                     self.grid_cells[1][1].configure(text="You", bg=c.BACKGROUND_COLOR_CELL_EMPTY)
                     self.grid_cells[1][2].configure(text="Lose!", bg=c.BACKGROUND_COLOR_CELL_EMPTY)
+            else:
+                self.matrix = logic.add_two(self.matrix)
+                self.update_grid_cells()
 
     def timer(self):
         while True:

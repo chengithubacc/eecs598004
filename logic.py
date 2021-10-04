@@ -43,6 +43,35 @@ def expand_size(matrix:list, max_size = 7):
         print("Cannot Expand Size: exceed maximum ",max_size)
         return matrix
 
+def expand_size(matrix:list, max_size = 7):
+    n_old = len(matrix)
+    if n_old<max_size:
+        matrix_new = []
+        matrix_new.insert(0,[0]*(n_old+1))
+        for i in range(n_old):
+            row_tmp = matrix[i]+[0]
+            matrix_new.append(row_tmp)
+        matrix_new.append([0]*(n_old+1))
+        c.GRID_LEN+=1
+        c.SIZE+=100
+        return matrix_new
+    else:
+        print("Cannot Expand Size: exceed maximum ",max_size)
+        return matrix
+
+def reduce_size(matrix):
+    new_matrix = []
+    for i in range(4):
+        new_vector = []
+        for j in range(4):
+            new_vector.append(matrix[i][j])
+        new_matrix.append(new_vector)
+    c.GRID_LEN = 4
+    c.SIZE = 400
+    return new_matrix
+
+
+
 
 ###########
 # Task 1b #
