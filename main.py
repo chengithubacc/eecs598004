@@ -5,7 +5,7 @@ import kbInput
 import puzzle
 import Gesture_Detector
 import GD2
-
+from Sound_Manager import Sound_Manager
 Game = None
 
 class Game2048():
@@ -71,6 +71,7 @@ class Game2048():
 
 if __name__ == '__main__':
     my_game = Game2048()
+
     while True:
         # print(my_game.gesture)
-        time.sleep(0.05)
+        time.sleep(0.01)

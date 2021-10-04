@@ -6,6 +6,7 @@ import random
 import logic
 import constants as c
 from PIL import ImageTk, Image
+from Sound_Manager import Sound_Manager
 
 from tkinter.ttk import Progressbar
 
@@ -303,6 +304,7 @@ class GameGrid(Frame):
         if self.frozen_lock:
             if key == c.KEY_PUNCH:
                 print("Punch input")
+                self.sm.play_smash_sound()
                 self.frozen_lock = False
                 self.frozen_reset()
                 # self.frozen_status = 0
