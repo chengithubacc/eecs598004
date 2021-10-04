@@ -7,6 +7,10 @@ import logic
 import constants as c
 from PIL import ImageTk, Image
 
+from tkinter.ttk import Progressbar
+
+
+
 def gen():
     return random.randint(0, c.GRID_LEN - 1)
 
@@ -43,6 +47,8 @@ class GameGrid(Frame):
 
         self.lastInput = time.time()
         self.frozen_flag = False
+        self.frozen_status = 0
+        self.frozen_lock = False
 
 
         import cv2
@@ -133,14 +139,47 @@ class GameGrid(Frame):
             bg=c.BACKGROUND_COLOR_CELL_EMPTY,
             justify=CENTER,
             font=c.FONT,
-            width=int(5*c.GRID_LEN+0.5*(c.GRID_LEN)),
-            height=2)
+            width=int(5*c.GRID_LEN+0.5*(c.GRID_LEN//2)),
+            height=1)
         t.grid()
         grid_row.append(t)
-
         self.grid_cells.append(grid_row)
 
-        for i in range(1,c.GRID_LEN+1):
+        grid_row =[]
+        cell = Frame(
+            background,
+            bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+            width=c.SIZE,
+            height=c.SIZE / c.GRID_LEN
+        )
+        cell.grid(
+            row=1,
+            column=0,
+            columnspan=c.GRID_LEN,
+            # sticky=tk.E,
+            padx=c.GRID_PADDING,
+            pady=c.GRID_PADDING
+        )
+        self.progress = Progressbar(master=cell, orient = tk.HORIZONTAL,
+              length = c.SIZE, mode = 'determinate')
+        self.progress.grid()
+        grid_row.append(self.progress)
+        self.progress['value'] = 0
+        self.grid_cells.append(grid_row)
+
+        # t = Label(
+        #     master=cell,
+        #     text="Score",
+        #     bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+        #     justify=CENTER,
+        #     font=c.FONT,
+        #     width=int(5*c.GRID_LEN+0.5*(c.GRID_LEN)) // 2,
+        #     height=2)
+        # t.grid()
+        # grid_row.append(t)
+        # self.grid_cells.append(grid_row)
+
+        for i in range(2,c.GRID_LEN+2):
             grid_row = []
             for j in range(c.GRID_LEN):
                 cell = Frame(
@@ -180,71 +219,22 @@ class GameGrid(Frame):
 
         self.background = background
 
-    def update_grid_layout(self):
-        background = Frame(self, bg=c.BACKGROUND_COLOR_GAME,width=c.SIZE, height=c.SIZE+1)
-        background.grid()
-        grid_row = []
-        cell = Frame(
-            background,
-            bg=c.BACKGROUND_COLOR_CELL_EMPTY,
-            width=c.SIZE,
-            height=c.SIZE / c.GRID_LEN
-        )
-        cell.grid(
-            row=0,
-            column=0,
-            columnspan=4,
-            # sticky=tk.E,
-            padx=c.GRID_PADDING,
-            pady=c.GRID_PADDING
-        )
-        t = Label(
-            master=cell,
-            text="Score",
-            bg=c.BACKGROUND_COLOR_CELL_EMPTY,
-            justify=CENTER,
-            font=c.FONT,
-            width=22,
-            height=2)
-        t.grid()
-        grid_row.append(t)
-        self.grid_cells.clear()
-        self.grid_cells.append(grid_row)
 
-        for i in range(1,c.GRID_LEN+1):
-            grid_row = []
-            for j in range(c.GRID_LEN):
-                cell = Frame(
-                    background,
-                    bg=c.BACKGROUND_COLOR_CELL_EMPTY,
-                    width=c.SIZE / c.GRID_LEN,
-                    height=c.SIZE / c.GRID_LEN
-                )
-                cell.grid(
-                    row=i,
-                    column=j,
-                    padx=c.GRID_PADDING,
-                    pady=c.GRID_PADDING
-                )
-                t = Label(
-                    master=cell,
-                    text="",
-                    bg=c.BACKGROUND_COLOR_CELL_EMPTY,
-                    justify=CENTER,
-                    font=c.FONT,
-                    width=5,
-                    height=2)
-                t.grid()
-                grid_row.append(t)
-            self.grid_cells.append(grid_row)
 
     def update_grid_frost(self, image):
         for i in range(0,c.GRID_LEN):
             for j in range(c.GRID_LEN):
-                self.grid_cells[i+1][j].itemconfig(
-                    self.grid_cells[i+1][j].image,
+                self.grid_cells[i+2][j].itemconfig(
+                    self.grid_cells[i+2][j].image,
                     image=image
                 )
+
+    def frozen_reset(self):
+        self.frozen_flag = False
+        self.lastTime = time.time()
+        if self.frozen_status != 0:
+            self.update_grid_frost(self.blockImg)
+        self.frozen_status = 0
 
 
     def update_grid_cells(self):
@@ -257,9 +247,9 @@ class GameGrid(Frame):
                 #print(i,j,len(self.matrix[i]))
                 new_number = self.matrix[i][j]
                 if new_number == 0:
-                    self.grid_cells[i+1][j].configure(bg=c.BACKGROUND_COLOR_CELL_EMPTY)
-                    self.grid_cells[i+1][j].itemconfig(
-                        self.grid_cells[i+1][j].text,
+                    self.grid_cells[i+2][j].configure(bg=c.BACKGROUND_COLOR_CELL_EMPTY)
+                    self.grid_cells[i+2][j].itemconfig(
+                        self.grid_cells[i+2][j].text,
                         text=str("")
                     )
                 else:
@@ -270,12 +260,12 @@ class GameGrid(Frame):
                     #     fg=c.CELL_COLOR_DICT[new_number],
                     #     # image=self.blockImg
                     # )
-                    self.grid_cells[i+1][j].itemconfig(
-                        self.grid_cells[i+1][j].text,
+                    self.grid_cells[i+2][j].itemconfig(
+                        self.grid_cells[i+2][j].text,
                         text=str(new_number),
                         fill=c.CELL_COLOR_DICT[new_number]
                     )
-                    self.grid_cells[i+1][j].config(
+                    self.grid_cells[i+2][j].config(
                         bg=c.BACKGROUND_COLOR_DICT[new_number],
                         # fg=c.CELL_COLOR_DICT[new_number],
                     )
@@ -310,8 +300,22 @@ class GameGrid(Frame):
             print("No action")
             return
         self.lastTime = time.time()
+        if self.frozen_lock:
+            if key == c.KEY_PUNCH:
+                print("Punch input")
+                self.frozen_lock = False
+                self.frozen_reset()
+                # self.frozen_status = 0
+                # self.update_grid_frost(self.blockImg)
+            else:
+                print("Frozen Lock, can only input punch")
+            return
+
+        self.frozen_reset()
         print(event)
-        print(self.frozen_flag)
+        # print(self.frozen_flag)
+
+        # self.frozen_status =
         if key == c.KEY_QUIT: exit()
         elif key == c.KEY_CHANGE:
             color_list = list(c.BACKGROUND_COLOR_DICT.values())
@@ -356,23 +360,26 @@ class GameGrid(Frame):
 
     def timer(self):
         while True:
-            if time.time() - self.lastInput > 3:
+            if time.time() - self.lastInput > 0.5:
                 print("frozen")
                 self.frozen_flag = True
 
             time.sleep(0.08)
     def frozen(self):
+
         while True:
-            i = 0
-            while self.frozen_flag and i < 10:
-                self.raw_image.putalpha(int(i*255/10))  # Half alpha; alpha argument must be an int
+            while self.frozen_flag and self.frozen_status < 15:
+                self.raw_image.putalpha(int(self.frozen_status*255/15))  # Half alpha; alpha argument must be an int
                 # image = self.raw_image.resize((c.SIZE, c.SIZE), Image.ANTIALIAS)
-                self.blockImg = ImageTk.PhotoImage(self.raw_image)
-                self.update_grid_frost(self.blockImg)
-                i += 1
-                if i == 6:
-                    i = 9
-                time.sleep(0.7)
+                blockImg = ImageTk.PhotoImage(self.raw_image)
+                self.update_grid_frost(blockImg)
+                self.progress["value"] = self.frozen_status * 10
+                if self.frozen_status == 14:
+                    self.frozen_lock = True
+                self.frozen_status += 1
+                if self.frozen_status == 10:
+                    self.frozen_status = 14
+                time.sleep(0.2)
             time.sleep(0.1)
 
 
@@ -383,3 +390,61 @@ class GameGrid(Frame):
     #     self.matrix[index[0]][index[1]] = 2
 if __name__ == '__main__':
     game_grid = GameGrid()
+
+    # def update_grid_layout(self):
+    #     background = Frame(self, bg=c.BACKGROUND_COLOR_GAME,width=c.SIZE, height=c.SIZE+1)
+    #     background.grid()
+    #     grid_row = []
+    #     cell = Frame(
+    #         background,
+    #         bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+    #         width=c.SIZE,
+    #         height=c.SIZE / c.GRID_LEN
+    #     )
+    #     cell.grid(
+    #         row=0,
+    #         column=0,
+    #         columnspan=4,
+    #         # sticky=tk.E,
+    #         padx=c.GRID_PADDING,
+    #         pady=c.GRID_PADDING
+    #     )
+    #     t = Label(
+    #         master=cell,
+    #         text="Score",
+    #         bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+    #         justify=CENTER,
+    #         font=c.FONT,
+    #         width=22,
+    #         height=2)
+    #     t.grid()
+    #     grid_row.append(t)
+    #     self.grid_cells.clear()
+    #     self.grid_cells.append(grid_row)
+    #
+    #     for i in range(1,c.GRID_LEN+1):
+    #         grid_row = []
+    #         for j in range(c.GRID_LEN):
+    #             cell = Frame(
+    #                 background,
+    #                 bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+    #                 width=c.SIZE / c.GRID_LEN,
+    #                 height=c.SIZE / c.GRID_LEN
+    #             )
+    #             cell.grid(
+    #                 row=i,
+    #                 column=j,
+    #                 padx=c.GRID_PADDING,
+    #                 pady=c.GRID_PADDING
+    #             )
+    #             t = Label(
+    #                 master=cell,
+    #                 text="",
+    #                 bg=c.BACKGROUND_COLOR_CELL_EMPTY,
+    #                 justify=CENTER,
+    #                 font=c.FONT,
+    #                 width=5,
+    #                 height=2)
+    #             t.grid()
+    #             grid_row.append(t)
+    #         self.grid_cells.append(grid_row)

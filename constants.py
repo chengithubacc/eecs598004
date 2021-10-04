@@ -68,6 +68,7 @@ KEY_QUIT = "Escape"
 KEY_BACK = "b"
 KEY_CHANGE = "c"
 KEY_RESET = "r"
+KEY_PUNCH = "p"
 
 KEY_UP = "Up"
 KEY_DOWN = "Down"
@@ -90,3 +91,4 @@ VK_UP = 0x26
 VK_RIGHT = 0x27
 VK_DOWN = 0x28
 VK_SPACE = 0x0A
+VK_P = 0x20

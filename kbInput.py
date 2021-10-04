@@ -23,9 +23,11 @@ VK_UP = 0x26
 VK_RIGHT = 0x27
 VK_DOWN = 0x28
 VK_BACK = 0x42
-VK_CHANGE = 0x43
+VK_CHANGE = 0x43  # 7: pinch, C_key
 VK_RESET = 0x52
 VK_SPACE = 0x0A
+VK_P = 0x50
+
 
 # C struct definitions
 
@@ -126,14 +128,20 @@ def createKeyInput(val):
         ReleaseKey(VK_BACK)
 
     elif val == 6:
+        PressKey(VK_CHANGE)
+        time.sleep(0.05)
+        ReleaseKey(VK_CHANGE)
+
+    elif val == 7:
         PressKey(VK_RESET)
         time.sleep(0.05)
         ReleaseKey(VK_RESET)
 
-    elif val == 7:
-        PressKey(VK_CHANGE)
+
+    elif val == 8:
+        PressKey(VK_P)
         time.sleep(0.05)
-        ReleaseKey(VK_CHANGE)
+        ReleaseKey(VK_P)
 
 def AltTab():
     """Press Alt+Tab and hold Alt key for 2 seconds

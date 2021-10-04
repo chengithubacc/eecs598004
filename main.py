@@ -4,6 +4,7 @@ import time
 import kbInput
 import puzzle
 import Gesture_Detector
+import GD2
 
 Game = None
 
@@ -22,11 +23,11 @@ class Game2048():
         #"before the start`"
         self._t_effector1.start()
 
-        # self._t_effector2 = threading.Thread(target=self.pizzle_worker)
-        # self._t_effector2.daemon = True
-        #
-        # # "before the start`"
-        # self._t_effector2.start()
+        self._t_effector2 = threading.Thread(target=self.pizzle_worker)
+        self._t_effector2.daemon = True
+
+        # "before the start`"
+        self._t_effector2.start()
 
     def pizzle_worker(self):
         Game = puzzle.GameGrid()
@@ -38,8 +39,10 @@ class Game2048():
             try:
                 if self.flag == False:
                     # print("I am here")
-                    self.GD = Gesture_Detector.Gesture_Detector()
+                    # self.GD = Gesture_Detector.Gesture_Detector()
+                    self.GD = GD2.GD2()
                     self.flag = True
+                # TODO: finish getGesture
                 self.gesture = self.GD.getGesture()
                 # if (self.gesture != 0):
                 #     print(111111111)
@@ -58,7 +61,7 @@ class Game2048():
 
                 # TODO: need to uncomment: turn off the input in the testing
                 # kbInput.createKeyInput(self.gesture)
-                kbInput.createKeyInput(0)
+                # kbInput.createKeyInput(0)
 
             except Exception as e:
                 print("EXCEPTION In gesture_worker: ", e)
