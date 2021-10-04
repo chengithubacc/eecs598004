@@ -13,7 +13,7 @@ class Sound_Manager:
         self.sounds["bgm"]["wind_sound"] = {"sound":mixer.Sound('assets/wind.mp3'), "is_playing":False}
         self.sounds["effect"] = {}
         self.sounds["effect"]["smash"] = {"sound":mixer.Sound('assets/smash.mp3'), "is_playing":False}
-        self.sounds["effect"]["freeze"] = {"sound":mixer.Sound('assets/freezing.mp3'), "is_playing":False}
+        self.sounds["effect"]["freeze"] = {"sound":mixer.Sound('assets/test.mp3'), "is_playing":False}
 
     def play_bgm(self):
         for i,j in self.sounds["bgm"].items():
@@ -22,12 +22,22 @@ class Sound_Manager:
                 j["is_playing"] = True
 
     def play_freeze_sound(self):
-        pass
+        sound = self.sounds["effect"]["freeze"]
+        if sound["is_playing"]:
+            sound["sound"].stop()
+        sound["sound"].play()
+        sound["is_playing"] = True
 
     def play_smash_sound(self):
-        pass
+        sound = self.sounds["effect"]["smash"]
+        if sound["is_playing"]:
+            sound["sound"].stop()
+        sound["sound"].play()
+        sound["is_playing"] = True
 
 if __name__ == '__main__':
     sm = Sound_Manager()
-    sm.play_bgm()
+    sm.play_freeze_sound()
+    time.sleep(5)
+    sm.play_freeze_sound()
     time.sleep(100)
