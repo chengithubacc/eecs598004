@@ -60,7 +60,7 @@ class Game2048():
                 #     kbInput.createKeyInput(10)
 
                 # TODO: need to uncomment: turn off the input in the testing
-                # kbInput.createKeyInput(self.gesture)
+                kbInput.createKeyInput(self.gesture)
                 # kbInput.createKeyInput(0)
 
             except Exception as e:

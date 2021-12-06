@@ -373,7 +373,7 @@ class GameGrid(Frame):
     def timer(self):
         while True:
             if time.time() - self.lastInput > 0.5:
-                print("frozen")
+                # print("frozen")
                 self.frozen_flag = True
 
             time.sleep(0.08)
